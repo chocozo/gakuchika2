@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ぼくのガクチカ 紡ごう！あなただけの相模ストーリー</title>
+    <title>相模ストーリー作成アプリ | ぼくのガクチカ</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for UI elements -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        
         body {
             background-color: #f7f9f2;
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: #334155;
         }
         .header-title {
             color: #7a9d70;
@@ -27,25 +33,32 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            background-color: #e0e0e0;
-            color: white;
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            transition: all 0.3s ease;
         }
         .step-indicator.active {
             background-color: #a8d1a0;
+            color: white;
+            box-shadow: 0 0 0 4px #f0fdf4;
         }
         .card {
             border-radius: 12px;
             padding: 1.5rem;
             height: 100%;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
         }
         .card-blue { background-color: #eff6ff; border: 1px solid #dbeafe; }
         .card-red { background-color: #fff1f2; border: 1px solid #ffe4e6; }
-        .card-gray { background-color: #f3f4f6; border: 1px solid #e5e7eb; }
+        .card-gray { background-color: #f8fafc; border: 1px solid #e2e8f0; }
         .card-orange { background-color: #fffaf0; border: 1px solid #ffedd5; }
         
         .card-title-blue { color: #2563eb; }
         .card-title-red { color: #e11d48; }
-        .card-title-gray { color: #4b5563; }
+        .card-title-gray { color: #475569; }
         .card-title-orange { color: #d97706; }
 
         textarea {
@@ -56,21 +69,24 @@
             margin-top: 10px;
             min-height: 120px;
             resize: vertical;
+            outline-color: #a8d1a0;
         }
         .btn-next {
             background-color: #a8d1a0;
             color: white;
-            padding: 10px 40px;
+            padding: 12px 40px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .btn-next:hover {
             background-color: #8fb988;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         .btn-ai {
-            background-color: #f0fdf4;
+            background-color: #ffffff;
             color: #166534;
             border: 1px solid #bcf0da;
             padding: 8px 16px;
@@ -81,10 +97,12 @@
             align-items: center;
             gap: 6px;
             transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .btn-ai:hover {
-            background-color: #dcfce7;
+            background-color: #f0fdf4;
             border-color: #86efac;
+            transform: scale(1.02);
         }
         .story-container {
             background-color: white;
@@ -93,59 +111,74 @@
             border-radius: 15px;
             line-height: 2.5;
             font-size: 1.25rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .underline-input {
             border-bottom: 2px solid #a8d1a0;
             display: inline-block;
-            min-width: 250px;
+            min-width: 200px;
             padding: 0 10px;
             font-weight: bold;
-            color: #4a6741;
+            color: #166534;
             outline: none;
+            transition: background-color 0.2s;
+        }
+        .underline-input:focus {
+            background-color: #f0fdf4;
         }
 
         .framework-box {
             border-left: 4px solid #a8d1a0;
             background: #ffffff;
-            margin-bottom: 1rem;
-            padding: 1rem;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
             border-radius: 0 8px 8px 0;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
         }
         .framework-number {
             display: inline-flex;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             background: #a8d1a0;
             color: white;
             border-radius: 50%;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-            margin-right: 8px;
+            font-size: 0.75rem;
+            margin-right: 10px;
         }
 
         .suggestion-card {
             border: 1px solid #e2e8f0;
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.25rem;
+            border-radius: 12px;
             background: #fff;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         .suggestion-card:hover {
             border-color: #a8d1a0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
         
-        /* AI Hint Dropdown */
         #ai-hint-box {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
         }
         #ai-hint-box.open {
-            max-height: 500px;
+            max-height: 1000px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+            .max-w-6xl { max-width: 100%; }
+            .story-container { border: 2px solid #eee; box-shadow: none; }
         }
     </style>
 </head>
@@ -153,186 +186,268 @@
 
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="text-center mb-8">
+        <header class="text-center mb-8 no-print">
             <h1 class="header-title mb-6">
-                ★ ぼくのガクチカ 紡ごう！あなただけの相模ストーリー ★
+                <i data-lucide="sparkles"></i>
+                相模ストーリー作成アプリ
             </h1>
-            <div class="flex justify-center gap-4 mb-4">
-                <div id="step-dot-1" class="step-indicator active">1</div>
-                <div id="step-dot-2" class="step-indicator">2</div>
-                <div id="step-dot-3" class="step-indicator">3</div>
+            <div class="flex justify-center items-center gap-6 mb-4">
+                <div class="flex flex-col items-center gap-2">
+                    <div id="step-dot-1" class="step-indicator active">1</div>
+                    <span class="text-xs font-bold text-gray-400">整理</span>
+                </div>
+                <div class="h-px w-8 bg-gray-200 mb-6"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <div id="step-dot-2" class="step-indicator">2</div>
+                    <span class="text-xs font-bold text-gray-400">作成</span>
+                </div>
+                <div class="h-px w-8 bg-gray-200 mb-6"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <div id="step-dot-3" class="step-indicator">3</div>
+                    <span class="text-xs font-bold text-gray-400">発見</span>
+                </div>
             </div>
         </header>
 
         <!-- Step 1: Input Page -->
-        <div id="page-1">
-            <div class="bg-green-50 border border-green-100 rounded-t-lg px-4 py-2 font-bold text-gray-700 text-center md:text-left">
-                STEP 1: 経験の整理
+        <div id="page-1" class="animate-in fade-in duration-500">
+            <div class="bg-green-600 text-white rounded-t-xl px-6 py-3 font-bold flex items-center gap-2 shadow-lg">
+                <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                STEP 1: 経験の棚卸し
             </div>
-            <div class="bg-white border border-t-0 border-green-100 rounded-b-lg p-6 shadow-sm">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center md:text-left">
+            <div class="bg-white border border-t-0 border-gray-100 rounded-b-xl p-6 md:p-8 shadow-xl">
+                <p class="text-gray-600 mb-8 text-center text-sm">
+                    まずは、日頃の活動や生活を振り返って、心に浮かぶことを自由に書き出してみましょう。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="card card-blue">
-                        <h2 class="font-bold card-title-blue text-lg">苦労・悩み</h2>
-                        <p class="text-sm text-gray-500">うまくいかなかったことは？</p>
-                        <textarea id="input-trouble" placeholder="例：チームの意見がまとまらず困った..."></textarea>
+                        <h2 class="font-bold card-title-blue text-lg flex items-center gap-2">
+                            <i data-lucide="frown" class="w-5 h-5"></i> 苦労・悩み
+                        </h2>
+                        <p class="text-xs text-blue-400 mb-2">うまくいかなかったことや、迷ったことは？</p>
+                        <textarea id="input-trouble" placeholder="例：チームの意見がバラバラで話が進まなかった..."></textarea>
                     </div>
                     <div class="card card-red">
-                        <h2 class="font-bold card-title-red text-lg">楽しい・好き</h2>
-                        <p class="text-sm text-gray-500">興味関心・夢中になったことは？</p>
-                        <textarea id="input-love" placeholder="例：新しいアイデアを出し合っているとき！"></textarea>
+                        <h2 class="font-bold card-title-red text-lg flex items-center gap-2">
+                            <i data-lucide="heart" class="w-5 h-5"></i> 楽しい・好き
+                        </h2>
+                        <p class="text-xs text-red-400 mb-2">時間を忘れて取り組んだことや、ワクワクしたことは？</p>
+                        <textarea id="input-love" placeholder="例：ポスターのデザインを考えているときが一番楽しかった！"></textarea>
                     </div>
                     <div class="card card-gray">
-                        <h2 class="font-bold card-title-gray text-lg">苦手・面倒</h2>
-                        <p class="text-sm text-gray-500">やりたくないことは？</p>
-                        <textarea id="input-dislike" placeholder="例：事務的な細かい作業や、決まった通りの行動。"></textarea>
+                        <h2 class="font-bold card-title-gray text-lg flex items-center gap-2">
+                            <i data-lucide="coffee" class="w-5 h-5"></i> 苦手・面倒
+                        </h2>
+                        <p class="text-xs text-gray-400 mb-2">やりたくないことや、ストレスを感じることは？</p>
+                        <textarea id="input-dislike" placeholder="例：データを一つずつ手入力する細かい作業。"></textarea>
                     </div>
                     <div class="card card-orange">
-                        <h2 class="font-bold card-title-orange text-lg">やりがい・目標</h2>
-                        <p class="text-sm text-gray-500">これからの夢は？</p>
-                        <textarea id="input-goal" placeholder="例：世の中にない新しいサービスを作ってみたい。"></textarea>
+                        <h2 class="font-bold card-title-orange text-lg flex items-center gap-2">
+                            <i data-lucide="target" class="w-5 h-5"></i> やりがい・目標
+                        </h2>
+                        <p class="text-xs text-orange-400 mb-2">将来やってみたいことや、実現したい社会は？</p>
+                        <textarea id="input-goal" placeholder="例：誰もが自分の意見を言いやすい場所を作りたい。"></textarea>
                     </div>
                 </div>
-                <div class="flex justify-end mt-8">
-                    <button onclick="goToPage(2)" class="btn-next w-full md:w-auto">次へ</button>
+                <div class="flex justify-end mt-10">
+                    <button onclick="goToPage(2)" class="btn-next w-full md:w-auto flex items-center justify-center gap-2">
+                        次へ進む <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Step 2: Story Building -->
-        <div id="page-2" class="hidden">
-            <div class="bg-green-50 border border-green-100 rounded-t-lg px-4 py-2 font-bold text-gray-700">
-                STEP 2: 文章をまとめよう
+        <div id="page-2" class="hidden animate-in slide-in-from-right duration-500">
+            <div class="bg-green-600 text-white rounded-t-xl px-6 py-3 font-bold flex items-center gap-2 shadow-lg">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+                STEP 2: ストーリーの言語化
             </div>
-            <div class="bg-white border border-t-0 border-green-100 rounded-b-lg p-6 md:p-8 shadow-sm">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div class="lg:col-span-5 order-2 lg:order-1">
-                        <div class="framework-box"><span class="framework-number">1</span> <strong>結論</strong></div>
-                        <div class="framework-box"><span class="framework-number">2</span> <strong>動機</strong></div>
-                        <div class="framework-box"><span class="framework-number">3</span> <strong>目標と困難</strong></div>
-                        <div class="framework-box"><span class="framework-number">4</span> <strong>取り組みと結果</strong></div>
-                        <div class="framework-box"><span class="framework-number">5</span> <strong>人柄</strong></div>
-                        <div class="framework-box"><span class="framework-number">6</span> <strong>学び</strong></div>
-                        <div class="mt-4 p-4 bg-yellow-50 rounded-lg text-xs leading-relaxed">
-                            💡 <strong>ヒント：</strong><br>
-                            「問い」には、活動で感じた「なぜ？」「どうすれば？」という疑問を入れてみよう。
-                        </div>
+            <div class="bg-white border border-t-0 border-gray-100 rounded-b-xl p-6 md:p-10 shadow-xl">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <!-- Framework Sidebar -->
+                    <div class="lg:col-span-4 space-y-3 no-print">
+                        <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-5 h-5 text-green-600"></i> 文章の構成案
+                        </h3>
+                        <div class="framework-box"><span class="framework-number">1</span> 結論：活動の内容</div>
+                        <div class="framework-box"><span class="framework-number">2</span> 動機：なぜ始めたか</div>
+                        <div class="framework-box"><span class="framework-number">3</span> 困難：どんな壁があったか</div>
+                        <div class="framework-box"><span class="framework-number">4</span> 解決：どう乗り越えたか</div>
+                        <div class="framework-box"><span class="framework-number">5</span> 人柄：大切にしている価値観</div>
+                        <div class="framework-box"><span class="framework-number">6</span> 学び：得られた「問い」</div>
                     </div>
 
-                    <div class="lg:col-span-7 order-1 lg:order-2">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-700">ストーリー入力エリア</h3>
-                            <button id="ai-hint-trigger" onclick="generateQuestionHints()" class="btn-ai">
-                                ✨ AIに問いのヒントをもらう
+                    <!-- Main Story Area -->
+                    <div class="lg:col-span-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <h3 class="font-bold text-gray-800 text-lg">自分だけの「問い」を紡ぐ</h3>
+                            <button id="ai-hint-trigger" onclick="generateQuestionHints()" class="btn-ai no-print">
+                                <i data-lucide="wand-2" class="w-4 h-4"></i> AIに「問い」のヒントをもらう
                             </button>
                         </div>
 
-                        <!-- AI Hint Display -->
-                        <div id="ai-hint-box" class="bg-green-50 rounded-lg mb-6 border border-green-200">
-                            <div class="p-4">
-                                <h4 class="text-sm font-bold text-green-800 mb-2 flex items-center">
-                                    <span class="mr-2">💡</span> AIからのヒント（クリックで入力）:
+                        <!-- AI Hint Dropdown -->
+                        <div id="ai-hint-box" class="bg-green-50 rounded-xl mb-6 border border-green-200 shadow-inner no-print">
+                            <div class="p-5">
+                                <h4 class="text-sm font-bold text-green-800 mb-3 flex items-center">
+                                    <i data-lucide="lightbulb" class="w-4 h-4 mr-2"></i> AIが提案する「問い」の視点：
                                 </h4>
-                                <div id="ai-hint-loading" class="hidden py-4 text-center">
-                                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+                                <div id="ai-hint-loading" class="hidden py-6 text-center">
+                                    <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
+                                    <p class="text-xs text-green-600 mt-2 font-medium">あなたの経験を分析中...</p>
                                 </div>
-                                <div id="ai-hint-content" class="space-y-2 text-sm text-green-900">
-                                    <!-- Hints will appear here -->
+                                <div id="ai-hint-content" class="grid grid-cols-1 gap-2">
+                                    <!-- Hints inserted here -->
                                 </div>
+                                <p class="text-[10px] text-green-600 mt-4 text-center">※提案をクリックすると、下の「問い」の部分に自動で入力されます</p>
                             </div>
                         </div>
 
-                        <div class="story-container mb-6">
+                        <div class="story-container">
                             <p class="mb-4">
                                 相模高校の<br>
-                                「 <span id="display-activity" class="underline-input" contenteditable="true" data-placeholder="（活動名を入れる）">（活動名）</span> 」の活動を通して、
+                                「 <span id="display-activity" class="underline-input" contenteditable="true" data-placeholder="（ここに活動名を入力）">（活動名）</span> 」の活動を通して、
                             </p>
                             <p>
-                                「 <span id="display-question" class="underline-input" contenteditable="true" data-placeholder="（問いを入れる）">（問い）</span> 」という問いに出会いました。
+                                「 <span id="display-question" class="underline-input" contenteditable="true" data-placeholder="（ここに出会った問いを入力）">（問い）</span> 」という問いに出会いました。
                             </p>
                         </div>
-                        <div id="summary-content" class="bg-gray-50 p-4 rounded-lg text-xs space-y-2"></div>
+                        
+                        <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-100 no-print">
+                            <p class="text-xs text-gray-500 font-bold mb-2 uppercase tracking-widest">あなたのメモ振り返り</p>
+                            <div id="summary-content" class="text-xs text-gray-600 leading-relaxed grid grid-cols-2 gap-4"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="flex justify-between mt-10 border-t pt-6">
-                    <button onclick="goToPage(1)" class="text-gray-500 font-bold">← もどる</button>
-                    <button onclick="goToPage(3)" class="btn-next">将来の可能性を見る →</button>
+
+                <div class="flex justify-between mt-12 border-t pt-8 no-print">
+                    <button onclick="goToPage(1)" class="flex items-center gap-2 text-gray-500 font-bold hover:text-gray-700 transition-colors">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i> もどって書き直す
+                    </button>
+                    <button onclick="goToPage(3)" class="btn-next flex items-center gap-2">
+                        将来の可能性を探る <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Step 3: Future Possibilities -->
-        <div id="page-3" class="hidden">
-            <div class="bg-green-50 border border-green-100 rounded-t-lg px-4 py-2 font-bold text-gray-700">
-                STEP 3: 「問い」から広がる将来の可能性
+        <!-- Step 3: Future Discoveries -->
+        <div id="page-3" class="hidden animate-in zoom-in-95 duration-500">
+            <div class="bg-green-600 text-white rounded-t-xl px-6 py-3 font-bold flex items-center gap-2 shadow-lg">
+                <i data-lucide="compass" class="w-5 h-5"></i>
+                STEP 3: 問いから広がる未来
             </div>
-            <div class="bg-white border border-t-0 border-green-100 rounded-b-lg p-6 md:p-8 shadow-sm text-center md:text-left">
+            <div class="bg-white border border-t-0 border-gray-100 rounded-b-xl p-6 md:p-10 shadow-xl">
                 
-                <div class="bg-green-50 p-6 rounded-xl mb-8 border border-green-100">
-                    <h3 class="text-sm font-bold text-green-800 mb-2">あなたの「相模ストーリー」：</h3>
-                    <p id="final-story-text" class="text-lg font-bold text-green-900"></p>
+                <div class="bg-green-50 p-8 rounded-2xl mb-12 border border-green-100 text-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i data-lucide="quote" class="w-20 h-20"></i>
+                    </div>
+                    <h3 class="text-xs font-bold text-green-600 mb-4 uppercase tracking-[0.2em]">Your Sagami Story</h3>
+                    <p id="final-story-text" class="text-xl md:text-2xl font-bold text-green-900 leading-relaxed"></p>
                 </div>
 
-                <div class="mb-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center justify-center md:justify-start">
-                        <span class="mr-2">🔍</span> 関連する学問や仕事の提案
+                <div class="mb-10">
+                    <h2 class="text-xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+                        <span class="bg-green-100 p-2 rounded-lg"><i data-lucide="sparkles" class="text-green-600"></i></span>
+                        AIが分析した「向いている可能性」
                     </h2>
                     
-                    <div id="ai-loading" class="hidden py-10 text-center">
-                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-4"></div>
-                        <p class="text-gray-500">AIがあなたの「問い」を分析しています...</p>
+                    <div id="ai-loading" class="hidden py-16 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                        <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
+                        <p class="text-gray-500 font-medium">あなたの「問い」に関連する学問と職業をリサーチしています...</p>
                     </div>
 
                     <div id="suggestion-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- AI suggestions go here -->
+                        <!-- AI Cards Inserted Here -->
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-10 border-t pt-6">
-                    <button onclick="goToPage(2)" class="text-gray-500 font-bold">← 文章を直す</button>
-                    <div class="flex gap-4">
-                        <button onclick="window.print()" class="px-6 py-2 border border-gray-300 rounded-lg text-sm font-bold hover:bg-gray-50">印刷して保存</button>
-                        <button onclick="copyToClipboard()" class="btn-next">全文コピー</button>
+                <!-- Action Buttons -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6 mt-12 border-t pt-10 no-print">
+                    <button onclick="goToPage(2)" class="flex items-center gap-2 text-gray-500 font-bold hover:text-gray-700">
+                        <i data-lucide="edit-3" class="w-5 h-5"></i> 文章を調整する
+                    </button>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button onclick="window.print()" class="px-6 py-3 border border-gray-300 rounded-xl text-sm font-bold hover:bg-gray-50 flex items-center gap-2 transition-all">
+                            <i data-lucide="printer" class="w-4 h-4"></i> 印刷・PDF保存
+                        </button>
+                        <button onclick="copyToClipboard()" class="btn-next flex items-center gap-2">
+                            <i data-lucide="copy" class="w-5 h-5"></i> 全文をコピー
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Toast -->
-        <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-8 py-3 rounded-full opacity-0 transition-opacity pointer-events-none z-50">
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-400 text-xs no-print pb-10">
+            &copy; 2024 相模ストーリー作成プロジェクト | AI-Powered Career Education
+        </footer>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-8 py-3 rounded-2xl shadow-2xl opacity-0 transition-all pointer-events-none z-50 flex items-center gap-2">
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
             コピーしました！
         </div>
-
     </div>
 
     <script>
-        const apiKey = ""; // APIキーは実行環境から提供されます
+        // Initialize Lucide Icons
+        lucide.createIcons();
 
+        // Environment Config (Empty strings for runtime injection)
+        const apiKey = ""; 
+
+        // State Management
+        let currentStep = 1;
+
+        // Navigation
         function goToPage(pageNum) {
             document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
             document.getElementById('page-' + pageNum).classList.remove('hidden');
             
             document.querySelectorAll('.step-indicator').forEach((el, index) => {
-                if (index < pageNum) el.classList.add('active');
-                else el.classList.remove('active');
+                if (index < pageNum) {
+                    el.classList.add('active');
+                    el.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                } else if (index + 1 === pageNum) {
+                    el.classList.add('active');
+                    el.innerText = pageNum;
+                } else {
+                    el.classList.remove('active');
+                    el.innerText = index + 1;
+                }
             });
+            lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (pageNum === 2) generateSummary();
             if (pageNum === 3) fetchSuggestions();
         }
 
+        // Summary View for Step 2
         function generateSummary() {
             const summaryDiv = document.getElementById('summary-content');
             const data = {
                 '苦労': document.getElementById('input-trouble').value,
-                '楽しい': document.getElementById('input-love').value,
+                '好き': document.getElementById('input-love').value,
                 '苦手': document.getElementById('input-dislike').value,
                 '目標': document.getElementById('input-goal').value
             };
-            summaryDiv.innerHTML = '<strong>あなたのメモ:</strong> ' + 
-                Object.entries(data).filter(([k,v]) => v.trim()).map(([k,v]) => `${k}:${v}`).join(' / ');
+            
+            summaryDiv.innerHTML = Object.entries(data)
+                .filter(([_, v]) => v.trim())
+                .map(([k, v]) => `
+                    <div class="bg-white p-2 rounded border border-gray-100">
+                        <span class="font-bold text-gray-400 block mb-1">${k}</span>
+                        <span class="text-gray-600 line-clamp-2">${v}</span>
+                    </div>
+                `).join('');
         }
 
-        // Feature: Generate AI Hints for the "Question" part
+        // Gemini AI: Generate Question Hints
         async function generateQuestionHints() {
             const hintBox = document.getElementById('ai-hint-box');
             const hintContent = document.getElementById('ai-hint-content');
@@ -349,17 +464,17 @@
                 'goal': document.getElementById('input-goal').value
             };
 
-            const prompt = `あなたは高校生のキャリア形成をサポートする教育アドバイザーです。
-            生徒が入力した4つの経験データから、その経験の裏側にある「哲学的な問い」や「社会的な疑問」を3つ提案してください。
-            高校生が自分の言葉として使いやすい、短くて深いフレーズにしてください。
+            const prompt = `あなたは高校生のキャリア教育アドバイザーです。
+            生徒の4つの経験メモから、その経験の核心を突く「探究の問い（〜とは何か？、〜をどうすればよいか？など）」を3つ提案してください。
+            15文字以内の短くキャッチーな問いにしてください。
             
-            経験データ：
-            - 苦労したこと：${data.trouble}
-            - 楽しかったこと：${data.love}
-            - 苦手なこと：${data.dislike}
+            経験：
+            - 苦労：${data.trouble}
+            - 好き：${data.love}
+            - 苦手：${data.dislike}
             - 目標：${data.goal}
             
-            JSON形式で返してください：
+            JSON形式のみで返してください：
             {"hints": ["問い1", "問い2", "問い3"]}`;
 
             try {
@@ -381,8 +496,8 @@
                 loading.classList.add('hidden');
                 json.hints.forEach(hint => {
                     const btn = document.createElement('button');
-                    btn.className = "block w-full text-left p-2 hover:bg-white rounded transition-colors border border-transparent hover:border-green-300";
-                    btn.innerText = `・${hint}`;
+                    btn.className = "text-left p-3 hover:bg-white rounded-lg transition-all border border-transparent hover:border-green-300 hover:shadow-sm text-green-900 font-medium flex items-center gap-2";
+                    btn.innerHTML = `<i data-lucide="plus-circle" class="w-4 h-4 text-green-400"></i> ${hint}`;
                     btn.onclick = () => {
                         const qEl = document.getElementById('display-question');
                         qEl.innerText = hint;
@@ -390,16 +505,23 @@
                     };
                     hintContent.appendChild(btn);
                 });
+                lucide.createIcons();
             } catch (error) {
                 loading.classList.add('hidden');
-                hintContent.innerHTML = '<p class="text-red-500">ヒントの生成に失敗しました。入力内容を増やしてみてください。</p>';
+                hintContent.innerHTML = '<p class="text-red-500 text-xs text-center p-4">エラーが発生しました。もっとメモを書き込んでみてください。</p>';
             }
         }
 
+        // Gemini AI: Fetch Academic/Career Suggestions
         async function fetchSuggestions() {
             const activity = document.getElementById('display-activity').innerText.trim();
             const question = document.getElementById('display-question').innerText.trim();
-            const storyText = `相模高校の「${activity}」の活動を通して、「${question}」という問いに出会いました。`;
+            
+            // Clean placeholders
+            const cleanActivity = activity.includes('（') ? "高校生活" : activity;
+            const cleanQuestion = question.includes('（') ? "自分らしく生きるには" : question;
+            
+            const storyText = `相模高校の「${cleanActivity}」の活動を通して、「${cleanQuestion}」という問いに出会いました。`;
             document.getElementById('final-story-text').innerText = storyText;
 
             const resultsContainer = document.getElementById('suggestion-results');
@@ -408,14 +530,13 @@
             resultsContainer.innerHTML = '';
             loading.classList.remove('hidden');
 
-            const systemPrompt = "あなたは進路指導の専門家です。高校生の『問い』に対して、関連する大学の学部（学問）と、将来の職業をそれぞれ3つ以上具体的に提案してください。";
-            const userQuery = `以下のストーリーを書いた生徒に、向いている学問分野と仕事を提案してください。
-            ストーリー：${storyText}
+            const systemPrompt = "あなたは進路指導の専門家です。高校生の出会った『問い』に対し、その解決や探究に繋がる大学の学問（学部・学科レベル）と、将来の職業をそれぞれ3つ提案してください。";
+            const userQuery = `ストーリー：${storyText}
             
-            以下のJSON形式で返してください：
+            JSON形式で返してください：
             {
-              "studies": [{"name": "学部名", "reason": "理由"}],
-              "jobs": [{"name": "職種名", "reason": "理由"}]
+              "studies": [{"name": "学部/学問名", "reason": "その問いとどう繋がるか簡潔に"}],
+              "jobs": [{"name": "具体的な職業名", "reason": "その問いを仕事でどう活かせるか簡潔に"}]
             }`;
 
             try {
@@ -437,32 +558,36 @@
                 
                 loading.classList.add('hidden');
                 
-                const renderItems = (items, title, icon) => {
-                    const section = document.createElement('div');
-                    section.className = "col-span-full mb-4";
-                    section.innerHTML = `<h3 class="text-lg font-bold text-gray-700 flex items-center border-b pb-2 mb-4">${icon} ${title}</h3>`;
-                    resultsContainer.appendChild(section);
+                const renderSection = (items, title, icon, colorClass) => {
+                    const header = document.createElement('div');
+                    header.className = "col-span-full mt-6 mb-2";
+                    header.innerHTML = `<h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                        <i data-lucide="${icon}" class="w-4 h-4"></i> ${title}
+                    </h3>`;
+                    resultsContainer.appendChild(header);
 
                     items.forEach(item => {
                         const card = document.createElement('div');
                         card.className = "suggestion-card";
                         card.innerHTML = `
-                            <h4 class="font-bold text-green-700 mb-2">${item.name}</h4>
-                            <p class="text-xs text-gray-600">${item.reason}</p>
+                            <div class="font-bold text-gray-800 text-lg border-l-4 border-green-400 pl-3">${item.name}</div>
+                            <div class="text-xs text-gray-500 leading-relaxed">${item.reason}</div>
                         `;
                         resultsContainer.appendChild(card);
                     });
                 };
 
-                renderItems(data.studies, "向いている学問", "🎓");
-                renderItems(data.jobs, "つながる仕事", "💼");
+                renderSection(data.studies, "向いている学問", "graduation-cap", "blue");
+                renderSection(data.jobs, "つながる仕事", "briefcase", "orange");
+                lucide.createIcons();
 
             } catch (error) {
                 loading.classList.add('hidden');
-                resultsContainer.innerHTML = `<p class="col-span-full text-red-500">エラーが発生しました。時間を置いて再度お試しください。</p>`;
+                resultsContainer.innerHTML = `<p class="col-span-full text-red-500 py-10 text-center">分析に失敗しました。時間をおいて「将来の可能性を探る」をもう一度押してください。</p>`;
             }
         }
 
+        // API Helpers
         async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
             for (let i = 0; i < retries; i++) {
                 try {
@@ -472,30 +597,40 @@
                 await new Promise(r => setTimeout(r, delay));
                 delay *= 2;
             }
-            throw new Error("Failed after retries");
+            throw new Error("API call failed");
         }
 
+        // Clipboard
         function copyToClipboard() {
             const story = document.getElementById('final-story-text').innerText;
-            const el = document.createElement('textarea');
-            el.value = story;
-            document.body.appendChild(el);
-            el.select();
+            const temp = document.createElement('textarea');
+            temp.value = story;
+            document.body.appendChild(temp);
+            temp.select();
             document.execCommand('copy');
-            document.body.removeChild(el);
+            document.body.removeChild(temp);
 
             const toast = document.getElementById('toast');
-            toast.classList.remove('opacity-0');
-            setTimeout(() => toast.classList.add('opacity-0'), 2000);
+            toast.style.opacity = '1';
+            toast.style.bottom = '40px';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.bottom = '10px';
+            }, 2000);
         }
 
+        // Content Editable Placeholders
         document.querySelectorAll('.underline-input').forEach(el => {
             el.addEventListener('focus', function() {
                 const placeholder = this.getAttribute('data-placeholder');
-                if (this.innerText === placeholder || this.innerText.includes('（')) this.innerText = '';
+                if (this.innerText === placeholder || this.innerText.includes('（')) {
+                    this.innerText = '';
+                }
             });
             el.addEventListener('blur', function() {
-                if (this.innerText.trim() === '') this.innerText = this.getAttribute('data-placeholder');
+                if (this.innerText.trim() === '') {
+                    this.innerText = this.getAttribute('data-placeholder');
+                }
             });
         });
     </script>
