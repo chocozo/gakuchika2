@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ぼくのガクチカ - キャリアデザインアプリ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f7f9f2;
+            color: #4a5568;
+        }
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        .active-step { background-color: #a3c9a8; color: white; }
+        .inactive-step { background-color: white; color: #cbd5e0; border: 1px solid #e2e8f0; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+    <!-- Header -->
+    <header class="text-center mt-8 mb-6">
+        <h1 class="text-2xl font-bold text-green-700">★ ぼくのガクチカ　紡ごう！あなただけの相模ストーリー ★</h1>
+        <div class="flex justify-center gap-4 mt-6">
+            <div id="step-1-btn" class="step-circle active-step">1</div>
+            <div id="step-2-btn" class="step-circle inactive-step">2</div>
+            <div id="step-3-btn" class="step-circle inactive-step">3</div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl bg-white rounded-3xl card-shadow overflow-hidden min-h-[500px] relative">
+        
+        <!-- STEP 1: 経験の整理 -->
+        <div id="step-1" class="p-0">
+            <div class="bg-green-100 p-4 font-bold text-green-800">STEP 1: 経験の整理</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8">
+                <!-- 苦労・悩み -->
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <label class="block text-blue-700 font-bold mb-2">苦労・悩み</label>
+                    <textarea id="input-trouble" class="w-full h-32 p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-300 resize-none" placeholder="大変だったこと、悩んだことを記入してください"></textarea>
+                </div>
+                <!-- 楽しい・好き -->
+                <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
+                    <label class="block text-pink-700 font-bold mb-2">楽しい・好き</label>
+                    <textarea id="input-fun" class="w-full h-32 p-3 rounded-lg border-none focus:ring-2 focus:ring-pink-300 resize-none" placeholder="夢中になったこと、好きなことを記入してください"></textarea>
+                </div>
+                <!-- 苦手・面倒 -->
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <label class="block text-gray-700 font-bold mb-2">苦手・面倒</label>
+                    <textarea id="input-weak" class="w-full h-32 p-3 rounded-lg border-none focus:ring-2 focus:ring-gray-300 resize-none" placeholder="避けて通りたいこと、苦手なことを記入してください"></textarea>
+                </div>
+                <!-- やりがい・目標 -->
+                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                    <label class="block text-orange-700 font-bold mb-2">やりがい・目標</label>
+                    <textarea id="input-worth" class="w-full h-32 p-3 rounded-lg border-none focus:ring-2 focus:ring-orange-300 resize-none" placeholder="やり遂げたいこと、目標を記入してください"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end p-6 bg-gray-50 border-t">
+                <button onclick="processToStep2()" id="to-step2-btn" class="bg-green-400 text-white px-10 py-2 rounded-full font-bold hover:bg-green-500 transition shadow-md">次へ</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: 問いの発見 -->
+        <div id="step-2" class="hidden p-12 flex flex-col items-center justify-center min-h-[500px]">
+            <div class="text-center space-y-8 w-full">
+                <div class="text-xl flex flex-wrap items-center justify-center gap-2">
+                    相模高校の 
+                    <input id="input-activity" type="text" class="border-b-2 border-blue-200 text-center text-blue-600 focus:outline-none px-2 w-48" placeholder="例：部活動">
+                    を通じて、
+                </div>
+                <div class="bg-blue-50/50 p-6 rounded-full inline-block border border-blue-100 w-full max-w-2xl">
+                    <div class="text-xl flex flex-wrap items-center justify-center gap-2">
+                        「 <input id="generated-question" type="text" class="bg-white rounded-md px-4 py-1 text-blue-700 w-full md:w-auto min-w-[300px] border-b-2 border-blue-300 focus:outline-none" placeholder="生成中..."> 」という問いに出会いました。
+                    </div>
+                </div>
+            </div>
+            <div class="w-full flex justify-between mt-12 px-4">
+                <button onclick="showStep(1)" class="text-gray-400 hover:text-gray-600 font-bold">戻る</button>
+                <button onclick="processToStep3()" id="to-step3-btn" class="bg-green-400 text-white px-10 py-2 rounded-full font-bold hover:bg-green-500 transition shadow-md">未来を導き出す</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: 未来の導出 -->
+        <div id="step-3" class="hidden p-12 flex flex-col items-center justify-center min-h-[500px]">
+            <div class="text-center space-y-10 w-full">
+                <div class="text-2xl font-bold flex flex-wrap items-center justify-center gap-4">
+                    大学では
+                    <span id="major-1" class="bg-yellow-100 px-4 py-2 rounded-lg border-b-4 border-yellow-200 min-w-[100px]">???</span>学 と
+                    <span id="major-2" class="bg-yellow-100 px-4 py-2 rounded-lg border-b-4 border-yellow-200 min-w-[100px]">???</span>学 を学びたい！
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 w-full max-w-2xl text-left">
+                    <p id="analysis-text" class="text-gray-600 leading-relaxed italic">
+                        (ここに問いに対する解説文が表示されます)
+                    </p>
+                </div>
+            </div>
+            <div class="w-full flex justify-center gap-6 mt-12 px-4">
+                <button onclick="showStep(1)" class="border border-gray-300 px-8 py-2 rounded-lg text-gray-500 hover:bg-gray-50">最初から</button>
+                <button onclick="window.print()" class="bg-green-700 text-white px-8 py-2 rounded-lg font-bold shadow-md hover:bg-green-800">印刷して保存</button>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-center flex-col items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent mb-4"></div>
+            <p class="text-green-800 font-bold">未来を紡いでいます...</p>
+        </div>
+    </main>
+
+    <footer class="mt-8 text-[10px] text-gray-400 tracking-widest">
+        SAGAMIHARA HIGH SCHOOL • CAREER DESIGN APP
+    </footer>
+
+    <script>
+        const apiKey = ""; // APIキーは自動で注入されます
+
+        let appState = {
+            trouble: "",
+            fun: "",
+            weak: "",
+            worth: "",
+            activity: "高校生活",
+            question: "",
+            majors: ["", ""],
+            analysis: ""
+        };
+
+        function showStep(num) {
+            document.querySelectorAll('main > div:not(#loading)').forEach(d => d.classList.add('hidden'));
+            document.getElementById(`step-${num}`).classList.remove('hidden');
+            
+            // Step Indicators
+            for(let i=1; i<=3; i++) {
+                const btn = document.getElementById(`step-${i}-btn`);
+                if(i === num) {
+                    btn.className = 'step-circle active-step';
+                } else {
+                    btn.className = 'step-circle inactive-step';
+                }
+            }
+        }
+
+        async function processToStep2() {
+            appState.trouble = document.getElementById('input-trouble').value;
+            appState.fun = document.getElementById('input-fun').value;
+            appState.weak = document.getElementById('input-weak').value;
+            appState.worth = document.getElementById('input-worth').value;
+
+            if(!appState.trouble && !appState.fun) {
+                alert("まずは経験をいくつか記入してみましょう！");
+                return;
+            }
+
+            document.getElementById('loading').classList.remove('hidden');
+
+            try {
+                const systemPrompt = "あなたは進路指導の専門家です。生徒が書いた経験（苦労、楽しい、苦手、やりがい）から、その生徒が人生で向き合うべき『深遠な問い（哲学的な問い）』を1つ生成してください。15文字〜25文字程度。";
+                const userQuery = `
+                    苦労：${appState.trouble}
+                    楽しい：${appState.fun}
+                    苦手：${appState.weak}
+                    やりがい：${appState.worth}
+                    
+                    この内容から「〇〇とは？」という形式の抽象的な問いを1つ作ってください。
+                `;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "本当の豊かさとは？";
+                appState.question = text.replace(/「|」|問い：|問：/g, '').trim();
+                
+                document.getElementById('generated-question').value = appState.question;
+                showStep(2);
+            } catch (error) {
+                console.error(error);
+                appState.question = "自分らしさの価値とは？";
+                document.getElementById('generated-question').value = appState.question;
+                showStep(2);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        async function processToStep3() {
+            appState.activity = document.getElementById('input-activity').value || "高校生活";
+            appState.question = document.getElementById('generated-question').value;
+
+            document.getElementById('loading').classList.remove('hidden');
+
+            try {
+                const systemPrompt = "あなたは大学の教授です。生徒が立てた『問い』に基づき、それを探求するために適した2つの学問領域（〇〇学）と、その理由を解説してください。JSON形式で返してください。";
+                const userQuery = `問い：「${appState.question}」`;
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    major1: { type: "string" },
+                                    major2: { type: "string" },
+                                    explanation: { type: "string" }
+                                }
+                            }
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                const result = JSON.parse(data.candidates[0].content.parts[0].text);
+                
+                document.getElementById('major-1').innerText = result.major1.replace('学', '');
+                document.getElementById('major-2').innerText = result.major2.replace('学', '');
+                document.getElementById('analysis-text').innerText = result.explanation;
+                
+                showStep(3);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('major-1').innerText = "社会";
+                document.getElementById('major-2').innerText = "心理";
+                document.getElementById('analysis-text').innerText = "エラーが発生しましたが、あなたの問いは非常に価値があります。ぜひ自分の興味を広げてみてください。";
+                showStep(3);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        // 初期表示
+        window.onload = () => showStep(1);
+    </script>
+</body>
+</html>
